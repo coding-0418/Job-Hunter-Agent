@@ -1,7 +1,7 @@
 import streamlit as st
 from PyPDF2 import PdfReader
 import requests
-from serpapi.google_search import GoogleSearch
+from serpapi import GoogleSearch
 import json
 import re
 import os
