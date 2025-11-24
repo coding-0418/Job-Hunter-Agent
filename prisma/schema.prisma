@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// Enums not supported in SQLite, using String
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  role      String   @default("CANDIDATE") // UserRole
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile      Profile?
+  resumes      Resume[]
+  applications Application[]
+  preferences  JobPreference?
+}
+
+model Profile {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  name      String?
+  headline  String?
+  phone     String?
+  location  String?
+  website   String?
+  linkedin  String?
+  github    String?
+  bio       String?
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model JobPreference {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  locations      String   // SQLite doesn't support String[], storing as JSON string or comma separated
+  remote         Boolean  @default(false)
+  jobTitles      String   // String[]
+  minSalary      Int?
+  skills         String   // String[]
+  industries     String   // String[]
+  
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Resume {
+  id          String   @id @default(uuid())
+  userId      String
+  name        String   // e.g. "Software Engineer Resume"
+  filePath    String   // Supabase Storage path
+  parsedData  String?  // Json not supported in SQLite, storing as String
+  textContent String?  // Full text content for search
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Job {
+  id          String   @id @default(uuid())
+  title       String
+  company     String
+  location    String?
+  remote      Boolean  @default(false)
+  salary      String?
+  description String
+  applyUrl    String?
+  source      String   // e.g. "linkedin", "indeed", "api"
+  externalId  String?  @unique
+  tags        String   // String[]
+  postedAt    DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  applications Application[]
+}
+
+model Application {
+  id          String            @id @default(uuid())
+  userId      String
+  jobId       String
+  status      String            @default("SAVED") // JobStatus
+  applyStatus String            @default("PENDING") // ApplicationStatus
+  notes       String?
+  appliedAt   DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, jobId])
+}
+
+model CrawlerLog {
+  id          String   @id @default(uuid())
+  source      String
+  jobsFound   Int
+  jobsAdded   Int
+  status      String   // "SUCCESS", "FAILED"
+  error       String?
+  durationMs  Int?
+  createdAt   DateTime @default(now())
+}
