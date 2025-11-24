@@ -4,19 +4,45 @@ import { updateJobStatus } from "@/app/actions/applications"
 
 interface JobCardProps {
     job: Job
+    selected?: boolean
+    onSelect?: (selected: boolean) => void
 }
 
-export default function JobCard({ job }: JobCardProps) {
+export default function JobCard({ job, selected = false, onSelect }: JobCardProps) {
     const handleStatusUpdate = async (status: "SELECTED" | "REJECTED" | "SAVED") => {
         await updateJobStatus(job.externalId, status)
         alert(`Job marked as ${status}`)
     }
 
+    const getMatchColor = (score?: number) => {
+        if (!score) return "bg-gray-100 text-gray-700"
+        if (score >= 80) return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+        if (score >= 60) return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
+        if (score >= 40) return "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300"
+        return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
+    }
+
     return (
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
-            <div className="flex justify-between items-start">
-                <div>
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{job.title}</h3>
+        <div className={`bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border-2 transition-all ${selected ? "border-blue-500 dark:border-blue-400" : "border-gray-200 dark:border-gray-700"
+            } hover:shadow-md`}>
+            <div className="flex justify-between items-start gap-4">
+                {onSelect && (
+                    <input
+                        type="checkbox"
+                        checked={selected}
+                        onChange={(e) => onSelect(e.target.checked)}
+                        className="mt-1 w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                    />
+                )}
+                <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{job.title}</h3>
+                        {job.matchScore !== undefined && (
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getMatchColor(job.matchScore)}`}>
+                                {job.matchScore}% Match
+                            </span>
+                        )}
+                    </div>
                     <p className="text-lg text-gray-600 dark:text-gray-300">{job.company}</p>
                 </div>
                 <div className="flex space-x-2">
@@ -45,7 +71,7 @@ export default function JobCard({ job }: JobCardProps) {
                 )}
                 <div className="flex items-center">
                     <Clock className="w-4 h-4 mr-1" />
-                    Posted {new Date(job.postedAt).toLocaleDateString()}
+                    Posted {job.postedAt ? new Date(job.postedAt).toLocaleDateString() : "Recently"}
                 </div>
             </div>
 

@@ -6,7 +6,11 @@ import { cn } from "@/lib/utils"
 import { uploadAndParseResume } from "@/app/actions/resume"
 import { useRouter } from "next/navigation"
 
-export default function UploadDropzone() {
+interface UploadDropzoneProps {
+    onUploadSuccess?: () => void
+}
+
+export default function UploadDropzone({ onUploadSuccess }: UploadDropzoneProps) {
     const router = useRouter()
     const [isDragging, setIsDragging] = useState(false)
     const [file, setFile] = useState<File | null>(null)
@@ -60,9 +64,14 @@ export default function UploadDropzone() {
             if (result.error) {
                 setError(result.error)
             } else {
-                // Store in localStorage for the builder to pick up
-                localStorage.setItem("currentResume", JSON.stringify(result.data))
-                router.push("/dashboard/resumes/builder")
+                if (onUploadSuccess) {
+                    onUploadSuccess()
+                } else {
+                    // Default behavior: redirect to builder
+                    setTimeout(() => {
+                        router.push(`/dashboard/resumes/builder?data=${encodeURIComponent(JSON.stringify(result))}`)
+                    }, 1500)
+                }
             }
         } catch {
             setError("An unexpected error occurred")

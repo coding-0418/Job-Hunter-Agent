@@ -1,5 +1,4 @@
 export interface Job {
-    id?: string
     title: string
     company: string
     location: string
@@ -10,7 +9,8 @@ export interface Job {
     source: string
     externalId: string
     tags: string[]
-    postedAt: Date
+    postedAt?: Date
+    matchScore?: number
 }
 
 export interface JobCrawlerAdapter {
