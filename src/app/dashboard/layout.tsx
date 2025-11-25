@@ -11,7 +11,7 @@ export default function DashboardLayout({
             {/* Sidebar */}
             <aside className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 hidden md:flex flex-col">
                 <div className="p-6">
-                    <h1 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Job Agent</h1>
+                    <h1 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Jobify</h1>
                 </div>
 
                 <nav className="flex-1 px-4 space-y-2">
@@ -48,7 +48,7 @@ export default function DashboardLayout({
             {/* Main Content */}
             <main className="flex-1 overflow-y-auto">
                 <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 md:hidden">
-                    <h1 className="text-xl font-bold text-blue-600">Job Agent</h1>
+                    <h1 className="text-xl font-bold text-blue-600">Jobify</h1>
                 </header>
                 <div className="p-8">
                     {children}

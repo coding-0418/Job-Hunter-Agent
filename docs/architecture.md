@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Job Agent is a monolithic Next.js application using the App Router. It leverages Server Actions for backend logic, eliminating the need for a separate API layer for most features.
+The Jobify is a monolithic Next.js application using the App Router. It leverages Server Actions for backend logic, eliminating the need for a separate API layer for most features.
 
 ## Components
 

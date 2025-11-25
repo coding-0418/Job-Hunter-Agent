@@ -1,6 +1,6 @@
-# Job Agent
+# Jobify
 
-A production-ready, end-to-end "Job Agent" web application built with Next.js, Supabase, and Tailwind CSS.
+A production-ready, end-to-end job automation web application built with Next.js, Supabase, and Tailwind CSS.
 
 ## Features
 
@@ -30,7 +30,7 @@ A production-ready, end-to-end "Job Agent" web application built with Next.js, S
 1. Clone the repo:
    ```bash
    git clone <repo-url>
-   cd job-hunter-agent
+   cd jobify
    ```
 
 2. Install dependencies:

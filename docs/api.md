@@ -1,6 +1,6 @@
 # API Reference
 
-The Job Agent uses Next.js Server Actions for backend logic.
+The Jobify uses Next.js Server Actions for backend logic.
 
 ## Server Actions
 
